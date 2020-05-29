@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace LinqConsoleApp
 {
@@ -207,6 +208,9 @@ namespace LinqConsoleApp
 
 
             //2. Lambda and Extension methods
+            var resLbd = Emps.Where(e => e.Job == "Backend programmer").ToList();
+            
+            resLbd.ForEach(Console.WriteLine);
         }
 
         /// <summary>
@@ -214,8 +218,11 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad2()
         {
-            
+            var resLbd = Emps.Where(e => e.Job == "Frontend programmer" && e.Salary > 1000)
+                .OrderByDescending(e => e.Ename)
+                .ToList();
 
+            resLbd.ForEach(Console.WriteLine);
         }
 
         /// <summary>
@@ -223,7 +230,9 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad3()
         {
-          
+            var resLbd = Emps.Max(e => e.Salary);
+
+            Console.WriteLine(resLbd);
         }
 
         /// <summary>
@@ -231,7 +240,10 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad4()
         {
+            var resLbd = Emps.Where(e => e.Salary == (Emps.Max(e => e.Salary)))
+                .ToList();
 
+            resLbd.ForEach(Console.WriteLine);
         }
 
         /// <summary>
@@ -239,7 +251,14 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad5()
         {
+            var resLbd = Emps.Select(e => new
+                {
+                    Nazwisko = e.Ename,
+                    Praca = e.Job
+                })
+                .ToList();
 
+            resLbd.ForEach(Console.WriteLine);
         }
 
         /// <summary>
@@ -249,7 +268,12 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad6()
         {
-
+            var resLbd = Emps.Join(Depts, emp => emp.Deptno, dept => dept.Deptno, (emp, dept) => new
+                        {
+                            emp.Ename,
+                            emp.Job,
+                            dept.Dname
+                        });
         }
 
         /// <summary>
@@ -257,7 +281,13 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad7()
         {
+            var resLbd = Emps.GroupBy(e => e.Job).Select(e => new
+            {
+                Praca = e.First().Job,
+                Liczba = e.Count()
+            }).ToList();
 
+            resLbd.ForEach(Console.WriteLine);
         }
 
         /// <summary>
@@ -266,7 +296,8 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad8()
         {
-
+            var resLbd = Emps.Any(e => e.Job == "Backend programmer");
+            Console.WriteLine(resLbd);
         }
 
         /// <summary>
@@ -275,7 +306,10 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad9()
         {
-
+            var resLbd = Emps.OrderBy(e => e.HireDate)
+                .Where(e => e.Job == "Frontend programmer")
+                .FirstOrDefault();
+            Console.WriteLine(resLbd);
         }
 
         /// <summary>
@@ -285,19 +319,34 @@ namespace LinqConsoleApp
         /// </summary>
         public void Przyklad10Button_Click()
         {
-
+            
+            var resLbd = Emps.Select(e => new
+            {
+                e.Ename,
+                e.Job,
+                e.HireDate
+            }).Union(null); //???
+            
         }
 
         //Znajdź pracownika z najwyższą pensją wykorzystując metodę Aggregate()
         public void Przyklad11()
         {
-
+            var resLbd = Emps.Select(e => new
+            {
+                e.Ename
+            }).Aggregate(null); //???
         }
 
         //Z pomocą języka LINQ i metody SelectMany wykonaj złączenie
         //typu CROSS JOIN
         public void Przyklad12()
         {
+            var surN = new string[] { "AA","BB", "CC" };
+            var resLbd = Emps.Select(e => new
+            {
+                e.Ename
+            }).SelectMany(d => surN).ToList();
 
         }
     }
